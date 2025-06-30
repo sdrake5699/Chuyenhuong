@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Chuyển hướng sau 5 giây</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100vw;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        
+        .info-text {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 18px;
+            color: #4a6baf;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .countdown-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: drop-shadow(0 10px 20px rgba(74, 107, 175, 0.3));
+        }
+        
+        .countdown-number {
+            font-size: 72px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #4a6baf 0%, #3a5a9c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .countdown-circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-sizing: border-box;
+        }
+        
+        .circle-outer {
+            border: 8px solid rgba(74, 107, 175, 0.2);
+            animation: rotate 2s linear infinite;
+        }
+        
+        .circle-middle {
+            border: 8px solid rgba(74, 107, 175, 0.4);
+            animation: rotate 1.5s linear infinite reverse;
+            width: 85%;
+            height: 85%;
+            top: 7.5%;
+            left: 7.5%;
+        }
+        
+        .circle-inner {
+            border: 8px solid #4a6baf;
+            animation: rotate 1s linear infinite;
+            width: 70%;
+            height: 70%;
+            top: 15%;
+            left: 15%;
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            background: #4a6baf;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        /* Landscape mode */
+        @media screen and (orientation: landscape) {
+            body {
+                min-height: 100vh;
+                min-width: 100vw;
+            }
+            
+            .countdown-container {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .countdown-number {
+                font-size: 60px;
+            }
+            
+            .info-text {
+                top: 20px;
+                left: 20px;
+                font-size: 16px;
+            }
+        }
+
+        /* Portrait mode */
+        @media screen and (orientation: portrait) {
+            .countdown-container {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .countdown-number {
+                font-size: 72px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="info-text">Chờ 5 giây để chuyển hướng đến link Hack Roblox </div>
+    <div class="countdown-container">
+        <div class="countdown-number" id="countdown">5</div>
+        <div class="countdown-circle circle-outer"></div>
+        <div class="countdown-circle circle-middle"></div>
+        <div class="countdown-circle circle-inner"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <script>
+        // Chống zoom trên mobile
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+        
+        document.addEventListener('touchmove', function(e) {
+            if (e.scale !== 1) { e.preventDefault(); }
+        }, { passive: false });
+
+        // URL bạn muốn chuyển hướng đến
+        const redirectUrl = "https://sdrake5699.github.io/HACK-ROBLOX/"; // Thay đổi URL này
+        
+        let count = 5;
+        const countdownElement = document.getElementById('countdown');
+        const particlesContainer = document.getElementById('particles');
+        
+        // Tạo hiệu ứng particle
+        function createParticles() {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random kích thước và vị trí
+                const size = Math.random() * 8 + 2;
+                const posX = Math.random() * 200;
+                const posY = Math.random() * 200;
+                const delay = Math.random() * 3;
+                const duration = Math.random() * 2 + 1;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}px`;
+                particle.style.top = `${posY}px`;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite alternate`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Thêm CSS animation cho particles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% {
+                    transform: translateY(0) translateX(0);
+                    opacity: 0;
+                }
+                50% {
+                    opacity: 0.6;
+                }
+                100% {
+                    transform: translateY(-50px) translateX(20px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        createParticles();
+        
+        const countdownInterval = setInterval(() => {
+            count--;
+            countdownElement.textContent = count;
+            
+            // Hiệu ứng khi số thay đổi
+            countdownElement.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                countdownElement.style.transform = 'scale(1)';
+            }, 200);
+            
+            if (count <= 0) {
+                clearInterval(countdownInterval);
+                // Thêm hiệu ứng mờ trước khi chuyển hướng
+                document.body.style.opacity = '0';
+                document.body.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 500);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
